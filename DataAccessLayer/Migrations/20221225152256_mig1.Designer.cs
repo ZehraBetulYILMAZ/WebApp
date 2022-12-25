@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20221225132845_mig1")]
+    [Migration("20221225152256_mig1")]
     partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Surname")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TcKimlikNo")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedDate")

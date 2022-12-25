@@ -71,6 +71,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("TcKimlikNo")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 

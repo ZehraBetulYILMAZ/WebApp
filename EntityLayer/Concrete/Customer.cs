@@ -9,6 +9,7 @@ namespace EntityLayer.Concrete
 {
    public class Customer: Person, IAuditEntity
     {
+        public string TcKimlikNo{ get; set; }
         public string PhoneNumber { get; set; }
         public string eMailAddress{ get; set; }
         public string Address { get; set; }
