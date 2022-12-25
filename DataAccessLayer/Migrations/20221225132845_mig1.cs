@@ -1,5 +1,8 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace DataAccessLayer.Migrations
 {
@@ -7,67 +10,63 @@ namespace DataAccessLayer.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "customers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    eMailAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    eMailAddress = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Address = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedObjectId = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedObjectId = table.Column<int>(type: "int", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Name = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Surname = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Password = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "reports",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RoomNumber = table.Column<int>(type: "int", nullable: false),
-                    ArrivalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_reports", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "rooms",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoomNumber = table.Column<int>(type: "int", nullable: false),
-                    Empty = table.Column<bool>(type: "bit", nullable: false),
-                    BaseCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Empty = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    BaseCost = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_rooms", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "creditCards",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CardNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     SecurityCode = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -80,15 +79,16 @@ namespace DataAccessLayer.Migrations
                         principalTable: "customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "invoices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PrintDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PrintDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -100,21 +100,22 @@ namespace DataAccessLayer.Migrations
                         principalTable: "customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "reservations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Cancel = table.Column<bool>(type: "bit", nullable: false),
-                    PostponementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BaseCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    kalmaFiyat = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ArrivalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ReservationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Cancel = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PostponementDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    BaseCost = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    kalmaFiyat = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    ArrivalDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DepartureDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     roomId = table.Column<int>(type: "int", nullable: true),
                     RoomNumber = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false)
@@ -132,9 +133,9 @@ namespace DataAccessLayer.Migrations
                         name: "FK_reservations_rooms_roomId",
                         column: x => x.roomId,
                         principalTable: "rooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_creditCards_CustomerId",
@@ -164,9 +165,6 @@ namespace DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "invoices");
-
-            migrationBuilder.DropTable(
-                name: "reports");
 
             migrationBuilder.DropTable(
                 name: "reservations");
