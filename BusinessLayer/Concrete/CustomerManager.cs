@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using System;
@@ -11,6 +12,7 @@ namespace BusinessLogicLayer.Concrete
 {
     public class CustomerManager : ICustomerService
     {
+        //Context context
         //mvc'deki controller gibi
         GenericRepositories<Customer> efCustomerReporistories;
         public CustomerManager()

@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Abstract;
+using BusinessLogicLayer.Concrete;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -21,13 +22,12 @@ namespace Oasis_WebApp.Controllers
 {
     public class BookingController : Controller
     {
-        private IReservationService _reservationService;
-        
-        public BookingController(IReservationService reservationService)
-        {
-            _reservationService = reservationService;
-            
-        }
+        //private IReservationService _reservationService;
+        private ReservationManager reservationManager = new ReservationManager();
+        //public BookingController(IReservationService reservationService)
+        //{
+        //    _reservationService = reservationService;
+        //}
 
         public IActionResult Index()
         {
@@ -50,7 +50,7 @@ namespace Oasis_WebApp.Controllers
                         
                     }; 
 
-                    reservationResult=  _reservationService.AddReservation(reservation);
+                    reservationResult=  reservationManager.AddReservation(reservation);
                     if(reservationResult < 0 )
                     {
 
@@ -77,22 +77,23 @@ namespace Oasis_WebApp.Controllers
             private bool EmailDogrula(string email)
             {
                 EmailApi emailApi = new EmailApi();
-                try
-                {
-                    var client = new RestClient($"https://api.apilayer.com/email_verification/check?email={email}");
-                    var request = new RestRequest();
-                    request.AddHeader("apikey", "jI6AB8gimPPHmPVkB9yX7o81ofMdBotk");
+            //try
+            //{
+            //    var client = new RestClient($"https://api.apilayer.com/email_verification/check?email={email}");
+            //    var request = new RestRequest();
+            //    request.AddHeader("apikey", "jI6AB8gimPPHmPVkB9yX7o81ofMdBotk");
 
-                    RestResponse response = client.Execute(request);
-                    Console.WriteLine(response.Content);
-                    emailApi = JsonConvert.DeserializeObject<EmailApi>(response.Content);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    emailApi.is_deliverable = false;
-                }
-                return emailApi.is_deliverable;
+            //    RestResponse response = client.Execute(request);
+            //    Console.WriteLine(response.Content);
+            //    emailApi = JsonConvert.DeserializeObject<EmailApi>(response.Content);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.ToString());
+            //    emailApi.is_deliverable = false;
+            //}
+            //return emailApi.free;
+            return true;
             }
             private Result ApiRegister(BookingModel booking)
             {

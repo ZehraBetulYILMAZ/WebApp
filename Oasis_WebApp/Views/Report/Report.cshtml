@@ -1,0 +1,63 @@
+﻿<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel OASIS | Contact</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.css
+    " />
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel OASIS | Contact</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.css
+    " />
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+    <div class="reports">
+        <h1>Reports</h1>
+        <button id="staff"
+                onclick="insertCalisan()"
+                class="btn staff"
+                type="button">
+            Staff Reports
+        </button>
+        <button id="guest" onclick="insertMusteri()" class="btn guest">
+            Guest Reports
+        </button>
+    </div>
+    <div id="calisanRapor"></div>
+    <div id="musteriRapor"></div>
+
+    <script type="text/javascript">
+        function insertCalisan() {
+            const iframe = document.createElement('iframe');
+
+            iframe.src = '../../DownloadFiles/Musterirapor.xlsx';
+            iframe.width = '0';
+            iframe.height = '0';
+
+            const container = document.getElementById('calisanRapor');
+            container.appendChild(iframe);
+        }
+
+        function insertMusteri() {
+            const iframe = document.createElement('iframe');
+
+            iframe.src = './reports/musteriRapor.xlsx';
+            iframe.width = '0';
+            iframe.height = '0';
+
+            const container = document.getElementById('musteriRapor');
+            container.appendChild(iframe);
+        }
+    </script>
+</body>
+</html>
