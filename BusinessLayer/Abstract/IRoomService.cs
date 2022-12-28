@@ -9,7 +9,7 @@ namespace BusinessLogicLayer.Abstract
 {
     public interface IRoomService
     {
-        void UpdateRoom(Room room);
+       int UpdateRoom(Room room);
         List<Room> GetAllReservations();
         Room GetReservationById(int id);
     }

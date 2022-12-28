@@ -1,5 +1,7 @@
-﻿using EntityLayer.Concrete;
+﻿using BusinessLogicLayer.Abstract;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MySql.Data.MySqlClient.Memcached;
 using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
@@ -19,6 +21,13 @@ namespace Oasis_WebApp.Controllers
 {
     public class BookingController : Controller
     {
+        private IReservationService _reservationService;
+        public BookingController(IReservationService reservationService)
+        {
+            _reservationService = reservationService;
+
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -29,91 +38,104 @@ namespace Oasis_WebApp.Controllers
             Result result = new Result();
             if (TcDogrulaMethod(booking) && EmailDogrula(booking.eMailAddress))
             {
-               result = ApiRegister(booking);
+                result = ApiRegister(booking);
                 if (result.success)
                 {
-                     //REZERVASYON BAŞARILI
+                    var reservation = new Reservation()
+                    {
+                        ArrivalDate = booking.ArrivalDate,
+                        DepartureDate = booking.DepartureDate,
+                        
+
+                    };
+
+                   // REZERVASYON BAŞARILI
+                    _reservationService.AddReservation(reservation);
                 }
+
                 else
                 {
                     //REZERVASYON BAŞARISIZ
+
+                    result.success = false;
+                    result.message = "Rezervasyonunuz gerçekleşemedi.";
                 }
+                }
+                else
+                {
+                    result.success = false;
+                    result.message = "Kişisel biligilerinizi yanlış girdiniz";
+                }
+                return View(result);
             }
-            else
+
+            private bool EmailDogrula(string email)
             {
-                result.success = false;
-                result.message = "Kişisel biligilerinizi yanlış girdiniz";
+                EmailApi emailApi = new EmailApi();
+                try
+                {
+                    var client = new RestClient($"https://api.apilayer.com/email_verification/check?email={email}");
+                    var request = new RestRequest();
+                    request.AddHeader("apikey", "jI6AB8gimPPHmPVkB9yX7o81ofMdBotk");
+
+                    RestResponse response = client.Execute(request);
+                    Console.WriteLine(response.Content);
+                    emailApi = JsonConvert.DeserializeObject<EmailApi>(response.Content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    emailApi.is_deliverable = false;
+                }
+                return emailApi.is_deliverable;
             }
-            return View(result);
-        }
-
-        private bool EmailDogrula(string email)
-        {
-            EmailApi emailApi = new EmailApi();
-            try
+            private Result ApiRegister(BookingModel booking)
             {
-                var client = new RestClient($"https://api.apilayer.com/email_verification/check?email={email}");
-                var request = new RestRequest();
-                request.AddHeader("apikey", "jI6AB8gimPPHmPVkB9yX7o81ofMdBotk");
 
-                RestResponse response = client.Execute(request);
-                Console.WriteLine(response.Content);
-                 emailApi = JsonConvert.DeserializeObject<EmailApi>(response.Content);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                emailApi.is_deliverable= false;               
-            }
-            return emailApi.is_deliverable;
-        }
-        private Result ApiRegister(BookingModel booking)
-        {
+                Result result = new Result();
+                try
+                {
+                    var client = new RestClient("http://localhost:5000/api/register");
+                    var payload = new JObject();
+                    payload.Add("eMailAddress", booking.eMailAddress);
+                    payload.Add("Password", booking.Password);
+                    payload.Add("Name", booking.Name);
+                    payload.Add("Surname", booking.Surname);
+                    var request = new RestRequest();
+                    request.AddStringBody(payload.ToString(), DataFormat.Json);
 
-            Result result = new Result();
-            try
-            {
-                var client = new RestClient("http://localhost:5000/api/register");
-                var payload = new JObject();
-                payload.Add("eMailAddress", booking.eMailAddress);
-                payload.Add("Password", booking.Password);
-                payload.Add("Name", booking.Name);
-                payload.Add("Surname", booking.Surname);
-                var request = new RestRequest();
-                request.AddStringBody(payload.ToString(), DataFormat.Json);
-
-                var obj = client.PostAsync(request).Result;
-                Console.WriteLine(obj.Content);
-                result = JsonConvert.DeserializeObject<Result>(obj.Content);
+                    var obj = client.PostAsync(request).Result;
+                    Console.WriteLine(obj.Content);
+                    result = JsonConvert.DeserializeObject<Result>(obj.Content);
 
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                result.message = "kayıt başarısız";
-                result.success = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    result.message = "kayıt başarısız";
+                    result.success = false;
+                    return result;
+                }
+
                 return result;
+
             }
-           
-                return result;
-            
-        }
-        private bool TcDogrulaMethod(BookingModel booking)
-        {
-            bool dogrulamaSonucu = false;
-            try
+            private bool TcDogrulaMethod(BookingModel booking)
             {
-                var mernisClient = new TcDogrula.KPSPublicSoapClient(EndpointConfiguration.KPSPublicSoap);
-                var tcKimlikDogrulamaServisResponse = mernisClient.TCKimlikNoDogrulaAsync(long.Parse(booking.TcKimlikNo), booking.Name, booking.Surname, booking.DateOfBirth.Year).GetAwaiter().GetResult();
-                dogrulamaSonucu = tcKimlikDogrulamaServisResponse.Body.TCKimlikNoDogrulaResult;
+                bool dogrulamaSonucu = false;
+                try
+                {
+                    var mernisClient = new TcDogrula.KPSPublicSoapClient(EndpointConfiguration.KPSPublicSoap);
+                    var tcKimlikDogrulamaServisResponse = mernisClient.TCKimlikNoDogrulaAsync(long.Parse(booking.TcKimlikNo), booking.Name, booking.Surname, booking.DateOfBirth.Year).GetAwaiter().GetResult();
+                    dogrulamaSonucu = tcKimlikDogrulamaServisResponse.Body.TCKimlikNoDogrulaResult;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    dogrulamaSonucu = false;
+                }
+                return dogrulamaSonucu;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                dogrulamaSonucu = false;
-            }
-            return dogrulamaSonucu;
         }
     }
-}

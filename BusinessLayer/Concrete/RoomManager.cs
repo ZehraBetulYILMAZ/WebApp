@@ -23,15 +23,25 @@ namespace BusinessLogicLayer.Concrete
 
         public Room GetReservationById(int id)
         {
-            return efRoomReporistories.GetById(id); //exeption at
+            return efRoomReporistories.GetById(id); 
         }
 
-        public void UpdateRoom(Room room)
+        public int UpdateRoom(Room room)
         {
-            if (room.Id != 0) //null check
+            try
             {
-                efRoomReporistories.Update(room);
+                if (room.Id != 0) //null check
+                {
+                    efRoomReporistories.Update(room);
+                }
+                return 1;
             }
+            catch
+            {
+
+                return -1;
+            }
+            
         }
     }
 }

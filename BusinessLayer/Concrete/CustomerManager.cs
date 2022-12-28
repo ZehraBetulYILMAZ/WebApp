@@ -18,17 +18,37 @@ namespace BusinessLogicLayer.Concrete
             efCustomerReporistories = new GenericRepositories<Customer>();
         }
        
-        public void AddCustomer(Customer customer)
+        public int AddCustomer(Customer customer)
         {
-            efCustomerReporistories.Insert(customer);
+            try
+            {
+                efCustomerReporistories.Insert(customer);
+                return 1;
+            }
+            catch 
+            {
+
+                return - 1;
+            }
+            
         }
 
-        public void DeleteCustomer(Customer customer)
+        public int DeleteCustomer(Customer customer)
         {
-            if(customer.Id!=0) //null check
+            try
             {
-                efCustomerReporistories.Delete(customer);
+                if (customer.Id != 0) //null check
+                {
+                    efCustomerReporistories.Delete(customer);
+                }
+                return 1;
             }
+            catch 
+            {
+
+                return -1;
+            }
+           
         }
 
         public List<Customer> GetAllCustomers()
@@ -41,12 +61,22 @@ namespace BusinessLogicLayer.Concrete
             return efCustomerReporistories.GetById(id); //exeption at
         }
 
-        public void UpdateCustomer(Customer customer)
+        public int UpdateCustomer(Customer customer)
         {
-            if (customer.Id != 0) //null check
+            try
             {
-                efCustomerReporistories.Update(customer);
+                if (customer.Id != 0) //null check
+                {
+                    efCustomerReporistories.Update(customer);
+                }
+                return 1;
             }
+            catch 
+            {
+
+                return -1;
+            }
+           
         }
     }
 }

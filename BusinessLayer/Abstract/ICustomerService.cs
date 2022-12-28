@@ -9,9 +9,9 @@ namespace BusinessLogicLayer.Abstract
 {
    public interface ICustomerService
     {
-        void AddCustomer(Customer customer);
-        void DeleteCustomer(Customer customer);
-        void UpdateCustomer(Customer customer);
+        int AddCustomer(Customer customer);
+        int DeleteCustomer(Customer customer);
+        int UpdateCustomer(Customer customer);
         List<Customer> GetAllCustomers();
         Customer GetCustomerById(int id);
 

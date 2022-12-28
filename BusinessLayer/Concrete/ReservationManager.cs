@@ -16,17 +16,37 @@ namespace BusinessLogicLayer.Concrete
         {
             efReservationReporistories = new GenericRepositories<Reservation>();
         }
-        public void AddReservation(Reservation reservation)
+        public int AddReservation(Reservation reservation)
         {
-            efReservationReporistories.Insert(reservation);
+            try
+            {
+                efReservationReporistories.Insert(reservation);
+                return 1;
+            }
+            catch 
+            {
+
+                return -1;
+            }
+           
         }
 
-        public void DeleteReservation(Reservation reservation)
+        public int DeleteReservation(Reservation reservation)
         {
-            if (reservation.Id != 0) //null check
+            try
             {
-                efReservationReporistories.Delete(reservation);
+                if (reservation.Id != 0) //null check
+                {
+                    efReservationReporistories.Delete(reservation);
+                }
+                return 1;
             }
+            catch 
+            {
+
+                return -1;
+            }
+           
         }
 
         public List<Reservation> GetAllReservations()
@@ -36,15 +56,25 @@ namespace BusinessLogicLayer.Concrete
 
         public Reservation GetReservationById(int id)
         {
-            return efReservationReporistories.GetById(id); //exeption at
+            return efReservationReporistories.GetById(id); 
         }
 
-        public void UpdateReservation(Reservation reservation)
+        public int UpdateReservation(Reservation reservation)
         {
-            if (reservation.Id != 0) //null check
+            try
             {
-                efReservationReporistories.Update(reservation);
+                if (reservation.Id != 0) //null check
+                {
+                    efReservationReporistories.Update(reservation);
+                }
+                return 1;
             }
+            catch 
+            {
+                return -1;
+                
+            }
+           
         }
     }
 }

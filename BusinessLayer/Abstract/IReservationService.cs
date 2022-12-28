@@ -9,9 +9,9 @@ namespace BusinessLogicLayer.Abstract
 {
   public  interface IReservationService
     {
-        void AddReservation(Reservation reservation);
-        void DeleteReservation(Reservation reservation);
-        void UpdateReservation(Reservation reservation);
+        int AddReservation(Reservation reservation);
+        int DeleteReservation(Reservation reservation);
+        int UpdateReservation(Reservation reservation);
         List<Reservation> GetAllReservations();
         Reservation GetReservationById(int id);
     }
