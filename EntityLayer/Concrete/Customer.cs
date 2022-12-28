@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-   public class Customer: Person, IAuditEntity
+   public class Customer: Person
     {
         public string TcKimlikNo{ get; set; }
         public string PhoneNumber { get; set; }
@@ -16,9 +16,7 @@ namespace EntityLayer.Concrete
         public List<Invoice> Invoices { get; set; }
         public List<CreditCard> CreditCards { get; set; }
         public List<Reservation> Reservations { get; set; }
-        public int CreatedObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DateTime? CreatedDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int UpdatedObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DateTime? UpdatedDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get ; set ; }
     }
 }

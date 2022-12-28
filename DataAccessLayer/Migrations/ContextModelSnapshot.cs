@@ -56,9 +56,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("CreatedObjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
@@ -76,9 +73,6 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("UpdatedObjectId")
-                        .HasColumnType("int");
 
                     b.Property<string>("eMailAddress")
                         .HasColumnType("longtext");
