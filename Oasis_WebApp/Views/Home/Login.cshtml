@@ -1,27 +1,35 @@
-﻿
+﻿@model Result
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hotel OASIS | Login</title>
+    <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.css
-    " />
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.css" />
 </head>
-
 <body>
     <div class="login-container">
         <div class="login-box">
             <div class="left-section"></div>
             <div class="right-section">
-                <input type="text" class="login-field" placeholder="admin" required />
-                <input type="password"
-                       class="login-field"
-                       placeholder="password"
-                       required />
-                <button class="btn btn-login" type="submit">Log In</button>
-                <button class="btn btn-register">Register</button>
+                <input type="text" name="eMailAdress" class="login-field" placeholder="admin" required />
+                <input type="password" name="Password" class="login-field" placeholder="password" />
+                <button class="btn btn-login">Log In</button>
             </div>
+
         </div>
     </div>
+    @if (@Model != null)
+    {
+   
+       <script type="text/javascript">
+          window.onload = function ()  
+         {
+             alert(@Model.message);
+         }
+       </script>
+   
+    }
 </body>

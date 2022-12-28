@@ -22,10 +22,11 @@ namespace Oasis_WebApp.Controllers
     public class BookingController : Controller
     {
         private IReservationService _reservationService;
+        
         public BookingController(IReservationService reservationService)
         {
             _reservationService = reservationService;
-
+            
         }
 
         public IActionResult Index()
@@ -38,6 +39,7 @@ namespace Oasis_WebApp.Controllers
             Result result = new Result();
             if (TcDogrulaMethod(booking) && EmailDogrula(booking.eMailAddress))
             {
+                int reservationResult = 0;
                 result = ApiRegister(booking);
                 if (result.success)
                 {
@@ -46,19 +48,22 @@ namespace Oasis_WebApp.Controllers
                         ArrivalDate = booking.ArrivalDate,
                         DepartureDate = booking.DepartureDate,
                         
+                    }; 
 
-                    };
+                    reservationResult=  _reservationService.AddReservation(reservation);
+                    if(reservationResult < 0 )
+                    {
 
-                   // REZERVASYON BAŞARILI
-                    _reservationService.AddReservation(reservation);
+                        //REZERVASYON BAŞARISIZ
+
+                        result.success = false;
+                        result.message = "Rezervasyonunuz gerçekleşemedi.";
+                    }
                 }
-
                 else
                 {
-                    //REZERVASYON BAŞARISIZ
-
                     result.success = false;
-                    result.message = "Rezervasyonunuz gerçekleşemedi.";
+                    result.message = "Kayıt Başrısız";
                 }
                 }
                 else
@@ -101,7 +106,9 @@ namespace Oasis_WebApp.Controllers
                     payload.Add("Password", booking.Password);
                     payload.Add("Name", booking.Name);
                     payload.Add("Surname", booking.Surname);
-                    var request = new RestRequest();
+                    payload.Add("TcKimlikNo", booking.TcKimlikNo);
+                    
+                var request = new RestRequest();
                     request.AddStringBody(payload.ToString(), DataFormat.Json);
 
                     var obj = client.PostAsync(request).Result;

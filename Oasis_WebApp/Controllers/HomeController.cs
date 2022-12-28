@@ -1,8 +1,11 @@
 ﻿using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Oasis_WebApp.Models;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -65,6 +68,41 @@ namespace Oasis_WebApp.Controllers
             fileStream.Close();
             return View();
         }
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string eMailAddress, string Password)
+        {
+            Result result = new Result();
+            try
+            {
+                var client = new RestClient("http://localhost:5000/api/login");
+                var payload = new JObject();
+                payload.Add("eMailAddress",eMailAddress);
+                payload.Add("Password", Password);
+
+                var request = new RestRequest();
+                request.AddStringBody(payload.ToString(), DataFormat.Json);
+
+                var obj = client.PostAsync(request).Result;
+                Console.WriteLine(obj.Content);
+                result = JsonConvert.DeserializeObject<Result>(obj.Content);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                result.message = "kayıt başarısız";
+                result.success = false;
+               
+            }
+            return View(result);
+        }
+
 
         public IActionResult Privacy()
         {
